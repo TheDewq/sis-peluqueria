@@ -9,6 +9,11 @@ import ProductList from './components/ProductList';
 import ServiceList from './components/ServiceList';
 import AddProduct from './components/AddProduct';
 import AddService from './components/AddService';
+import Caja from './components/Caja';
+import Movimientos from './components/Movimientos';
+import Login from './views/Login';
+import CustomerManagement from './components/CustomerManagement';
+import Receipt from './components/Receipt';
 
 const App = () => {
   return (
@@ -20,6 +25,11 @@ const App = () => {
           <Route path="/statistics" element={<Statistics />} />
           <Route path="/addproduct" element={<AddProduct />} />
           <Route path="/addservice" element={<AddService />} />
+          <Route path="/customermanagement" element={<CustomerManagement />} />
+          <Route path="/caja" element={<Caja />} />
+          <Route path="/movimientos" element={<Movimientos />} />
+          <Route path="/login" element={<Login/>} />
+          <Route path="/receip" element={<Receipt/>} />
         </Routes>
       </Layout>
     </Router>

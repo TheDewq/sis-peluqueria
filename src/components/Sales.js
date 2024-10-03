@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { collection, getDocs, addDoc, doc, updateDoc, getDoc } from 'firebase/firestore';
 import { db } from '../services/firebase';
-import '../styles/styles.css'; // Asegúrate de importar el CSS
+import '../styles/styles.css';
+import Receipt from '../components/Receipt'; // Importar el componente de recibo
 
 const Sales = () => {
   const [products, setProducts] = useState([]);
@@ -14,19 +15,25 @@ const Sales = () => {
   const [change, setChange] = useState(0);
   const [productSearchTerm, setProductSearchTerm] = useState('');
   const [serviceSearchTerm, setServiceSearchTerm] = useState('');
+  const [customers, setCustomers] = useState([]);
+  const [selectedCustomer, setSelectedCustomer] = useState(null);
+  const printRef = useRef(); // Referencia para el área que se va a imprimir
 
   useEffect(() => {
     const fetchItems = async () => {
       const productsSnapshot = await getDocs(collection(db, 'products'));
       const servicesSnapshot = await getDocs(collection(db, 'services'));
+      const customersSnapshot = await getDocs(collection(db, 'customers'));
 
       const productList = productsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       const serviceList = servicesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      const customerList = customersSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
       setProducts(productList);
       setServices(serviceList);
+      setCustomers(customerList);
       setFilteredProducts(productList);
-      setFilteredServices(serviceList);
+      setFilteredServices(serviceList); 
     };
 
     fetchItems();
@@ -34,10 +41,10 @@ const Sales = () => {
 
   const handleAddItem = (item, quantity) => {
     if (quantity <= 0) return;
-
+  
     const existingItemIndex = selectedItems.findIndex(selected => selected.id === item.id);
     const itemToAdd = { ...item, quantity };
-
+  
     if (existingItemIndex > -1) {
       const updatedItems = [...selectedItems];
       updatedItems[existingItemIndex].quantity += quantity;
@@ -45,10 +52,12 @@ const Sales = () => {
     } else {
       setSelectedItems([...selectedItems, itemToAdd]);
     }
-
-    const itemPrice = item.salePrice || item.price;
+  
+    // Usar salePrice para productos y servicePrice para servicios
+    const itemPrice = item.salePrice || item.servicePrice || item.price;
     setTotal(prevTotal => prevTotal + itemPrice * quantity);
   };
+  
 
   const handleEditItemQuantity = (itemId, newQuantity) => {
     if (newQuantity < 1) return;
@@ -78,7 +87,24 @@ const Sales = () => {
     setChange(payment - total);
   };
 
+  const handlePrint = () => {
+    const printContent = printRef.current;
+    const printWindow = window.open('', '', 'width=800,height=600');
+    printWindow.document.write('<html><head><title>Recibo</title></head><body>');
+    printWindow.document.write(printContent.innerHTML);
+    printWindow.document.write('</body></html>');
+    printWindow.document.close();
+    printWindow.focus();
+    printWindow.print();
+    printWindow.close();
+  };
+
   const handleGenerateSale = async () => {
+    if (!selectedCustomer) {
+      alert('Debe seleccionar un cliente para generar la venta.');
+      return;
+    }
+
     if (customerPayment < total) {
       alert('El pago es insuficiente.');
       return;
@@ -89,6 +115,7 @@ const Sales = () => {
       totalAmount: total,
       payment: customerPayment,
       change: change,
+      customer: selectedCustomer,
       date: new Date(),
     });
 
@@ -113,14 +140,16 @@ const Sales = () => {
     }
 
     alert('Venta generada con éxito.');
+    handlePrint(); // Llamar a la función de impresión después de generar la venta
 
     // Reiniciar el estado después de la venta
     setSelectedItems([]);
     setTotal(0);
-    setCustomerPayment(0); // Reiniciar la barra de dinero entregado
+    setCustomerPayment(0);
     setChange(0);
-    setProductSearchTerm(''); // Reiniciar búsqueda de productos
-    setServiceSearchTerm(''); // Reiniciar búsqueda de servicios
+    setProductSearchTerm('');
+    setServiceSearchTerm('');
+    setSelectedCustomer(null);
   };
 
   const handleProductSearch = (e) => {
@@ -130,16 +159,40 @@ const Sales = () => {
     setFilteredProducts(filtered);
   };
 
+
   const handleServiceSearch = (e) => {
     const searchTerm = e.target.value.toLowerCase();
     setServiceSearchTerm(searchTerm);
-    const filtered = services.filter(service => service.name?.toLowerCase().includes(searchTerm));
+    const filtered = services.filter(service => 
+      service.serviceName?.toLowerCase().includes(searchTerm)
+    );
     setFilteredServices(filtered);
+  };
+  
+
+
+  const handleCustomerSelect = (e) => {
+    const customerId = e.target.value;
+    const customer = customers.find(c => c.id === customerId);
+    setSelectedCustomer(customer);
   };
 
   return (
     <div className="container">
       <h2>Generar Venta</h2>
+
+      {/* Selección de clientes */}
+      <div className="customer-section">
+        <h3>Seleccionar Cliente</h3>
+        <select onChange={handleCustomerSelect} value={selectedCustomer ? selectedCustomer.id : ''}>
+          <option value="" disabled>Seleccione un cliente</option>
+          {customers.map(customer => (
+            <option key={customer.id} value={customer.id}>
+              {customer.name} - {customer.email}
+            </option>
+          ))}
+        </select>
+      </div>
 
       {/* Búsqueda y listado de productos */}
       <div className="search-section">
@@ -147,7 +200,7 @@ const Sales = () => {
         <input
           type="text"
           placeholder="Buscar productos"
-          value={productSearchTerm} // Añadido para vincular valor de entrada
+          value={productSearchTerm}
           onChange={handleProductSearch}
         />
         {productSearchTerm && filteredProducts.length > 0 && (
@@ -162,14 +215,14 @@ const Sales = () => {
                   onChange={(e) => {
                     const quantity = parseInt(e.target.value) || 1;
                     handleAddItem(product, quantity);
-                    setProductSearchTerm(''); // Reiniciar barra de búsqueda de productos
-                    setFilteredProducts(products); // Reiniciar la lista de productos filtrados
+                    setProductSearchTerm('');
+                    setFilteredProducts(products);
                   }}
                 />
                 <button onClick={() => {
                   handleAddItem(product, 1);
-                  setProductSearchTerm(''); // Reiniciar barra de búsqueda de productos
-                  setFilteredProducts(products); // Reiniciar la lista de productos filtrados
+                  setProductSearchTerm('');
+                  setFilteredProducts(products);
                 }}>Agregar Producto</button>
               </div>
             ))}
@@ -177,24 +230,24 @@ const Sales = () => {
         )}
       </div>
 
-      {/* Búsqueda y listado de servicios */}
-      <div className="search-section">
+            {/* Búsqueda y listado de servicios */}
+            <div className="search-section">
         <h3>Buscar Servicios</h3>
         <input
           type="text"
           placeholder="Buscar servicios"
-          value={serviceSearchTerm} // Añadido para vincular valor de entrada
+          value={serviceSearchTerm}
           onChange={handleServiceSearch}
         />
         {serviceSearchTerm && filteredServices.length > 0 && (
           <div className="item-list">
             {filteredServices.map(service => (
               <div key={service.id}>
-                <p>{service.name} - {service.price}$</p>
+                <p>{service.serviceName} - {service.servicePrice}$</p> {/* Usar serviceName y servicePrice */}
                 <button onClick={() => {
                   handleAddItem(service, 1);
-                  setServiceSearchTerm(''); // Reiniciar barra de búsqueda de servicios
-                  setFilteredServices(services); // Reiniciar la lista de servicios filtrados
+                  setServiceSearchTerm('');
+                  setFilteredServices(services);
                 }}>Agregar Servicio</button>
               </div>
             ))}
@@ -202,38 +255,57 @@ const Sales = () => {
         )}
       </div>
 
-      {/* Resumen de venta */}
-      <div className="summary">
-        <h3>Resumen de Venta</h3>
-        <ul>
-          {selectedItems.map((item) => (
-            <li key={item.id}>
-              {item.name} - {item.salePrice || item.price}$ x {item.quantity}
-              <input
-                type="number"
-                className="quantity-input"
-                value={item.quantity}
-                onChange={(e) => handleEditItemQuantity(item.id, parseInt(e.target.value) || 1)}
-              />
-              <button onClick={() => handleRemoveItem(item.id)}>Eliminar</button>
-            </li>
-          ))}
-        </ul>
-        <h4>Total: {total}$</h4>
+      <h3>Ítems Seleccionados</h3>
+<div className="selected-items">
+  {selectedItems.map(item => (
+    <div key={item.id}>
+      <p>
+        {item.serviceName || item.name} - {item.quantity} x {item.servicePrice || item.salePrice || item.price}$
+      </p>
+      <input
+        type="number"
+        min="1"
+        value={item.quantity}
+        onChange={(e) => handleEditItemQuantity(item.id, parseInt(e.target.value))}
+      />
+      <button onClick={() => handleRemoveItem(item.id)}>Eliminar</button>
+    </div>
+  ))}
+</div>
+
+
+      <div className="payment-section">
+        <h3>Total: {total}$</h3>
         <input
           type="number"
           placeholder="Dinero entregado"
-          value={customerPayment} // Vincular el valor del input al estado
+          value={customerPayment}
           onChange={handlePaymentChange}
         />
-        <h4>Cambio: {change}$</h4>
+        <h3>Cambio: {change}$</h3>
         <button onClick={handleGenerateSale}>Generar Venta</button>
+      </div>
+
+      {/* Componente de recibo para imprimir */}
+      <div style={{ display: 'none' }}>
+        <div ref={printRef}>
+          <Receipt
+            items={selectedItems}
+            total={total}
+            payment={customerPayment}
+            change={change}
+            customer={selectedCustomer}
+          />
+        </div>
       </div>
     </div>
   );
 };
 
 export default Sales;
+
+
+
 
 
 

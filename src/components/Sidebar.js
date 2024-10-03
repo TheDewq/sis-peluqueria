@@ -5,13 +5,18 @@ import { Link } from 'react-router-dom'; // Asegúrate de tener react-router-dom
 const Sidebar = () => {
   return (
     <nav className="sidebar">
-      <h2>Peluquería</h2>
+      <h2>PELUQUERIA</h2>
       <ul>
-        <li><Link to="/">Dashboard</Link></li>
+        <li><Link to="/">Inicio</Link></li>
         <li><Link to="/sales">Realizar Venta</Link></li>
         <li><Link to="/statistics">Estadísticas</Link></li>
         <li><Link to="/addproduct">Inventario</Link></li>
         <li><Link to="/addservice">Servicios</Link></li>
+        <li><Link to="/customermanagement">Clientes</Link></li>
+        <li><Link to="/caja">Caja</Link></li>
+        <li><Link to="/movimientos">Movimientos</Link></li>
+
+
 
 
       </ul>
