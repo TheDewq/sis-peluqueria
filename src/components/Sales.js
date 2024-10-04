@@ -255,8 +255,7 @@ const Sales = () => {
         )}
       </div>
 
-      <h3>Ítems Seleccionados</h3>
-<div className="selected-items">
+    <div className="selected-items">
   {selectedItems.map(item => (
     <div key={item.id}>
       <p>
@@ -272,7 +271,6 @@ const Sales = () => {
     </div>
   ))}
 </div>
-
 
       <div className="payment-section">
         <h3>Total: {total}$</h3>

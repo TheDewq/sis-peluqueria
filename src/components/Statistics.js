@@ -32,25 +32,30 @@ const Statistics = () => {
       }, {});
       setProductsMap(productMap); // Almacena el mapa de productos
 
+      
       salesList.forEach(sale => {
         totalSalesAmount += sale.totalAmount || 0;
-
+      
+        // Calcular ventas de productos
         if (Array.isArray(sale.items)) {
           sale.items.forEach(item => {
-            const itemTotal = item.salePrice * item.quantity || 0; 
+            const itemTotal = (item.salePrice || 0) * (item.quantity || 0); 
             totalProductAmount += itemTotal;
-            const itemPurchasePrice = item.purchasePrice * item.quantity || 0; 
+      
+            const itemPurchasePrice = (item.purchasePrice || 0) * (item.quantity || 0); 
             totalProfitAmount += (itemTotal - itemPurchasePrice); 
           });
         }
-
+      
+        // Calcular ventas de servicios
         if (Array.isArray(sale.services)) {
           sale.services.forEach(service => {
-            const servicePrice = service.price || 0; 
-            totalServiceAmount += servicePrice;
+            const serviceTotal = (service.price || 0) * (service.quantity || 1); // Multiplica el precio del servicio por la cantidad
+            totalServiceAmount += serviceTotal; // Suma al total de servicios
           });
         }
       });
+      
 
       setTotalSales(totalSalesAmount);
       setTotalProductSales(totalProductAmount);
@@ -109,6 +114,18 @@ const Statistics = () => {
 };
 
 export default Statistics;
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
