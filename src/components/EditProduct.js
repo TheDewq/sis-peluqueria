@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { doc, getDoc, updateDoc, getDocs, collection } from 'firebase/firestore';
 import { db } from '../services/firebase';
-
+import '../styles/styles.css';
 const EditProduct = ({ productId, onClose }) => {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);

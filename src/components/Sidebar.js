@@ -1,6 +1,7 @@
 // src/components/Sidebar.js
 import React from 'react';
 import { Link } from 'react-router-dom'; // Asegúrate de tener react-router-dom instalado
+import '../styles/styles.css';
 
 const Sidebar = () => {
   return (
@@ -15,6 +16,9 @@ const Sidebar = () => {
         <li><Link to="/customermanagement">Clientes</Link></li>
         <li><Link to="/caja">Caja</Link></li>
         <li><Link to="/movimientos">Movimientos</Link></li>
+        <li><Link to="/appointments">Citas</Link></li>
+        <li><Link to="/detallescliente">Detalles De Citas</Link></li>
+
 
 
 

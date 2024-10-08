@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { collection, getDocs, deleteDoc, doc, updateDoc } from 'firebase/firestore';
 import { db } from '../services/firebase';
-
+import '../styles/styles.css';
 const Movements = () => {
   const [movements, setMovements] = useState([]);
   const [editId, setEditId] = useState(null);
@@ -67,41 +67,44 @@ const Movements = () => {
   }, []);
 
   return (
-    <div>
-      <h2>Registro de Movimientos</h2>
-      <ul>
+    <div className="movements-container">
+      <h2 className="movements-title">Registro de Movimientos</h2>
+      <ul className="movements-list">
         {movements.map(movement => (
-          <li key={movement.id}>
+          <li className="movements-item" key={movement.id}>
             {movement.type === 'entrada' ? 'Entrada' : 'Salida'} - {movement.amount} $ 
             {movement.reason && ` (Motivo: ${movement.reason})`} 
             (Fecha: {movement.createdAt ? movement.createdAt.toDateString() : 'Fecha no disponible'})
-            <button onClick={() => handleEditMovement(movement)}>Editar</button>
-            <button onClick={() => handleDeleteMovement(movement.id)}>Eliminar</button>
+            <button className="movements-button" onClick={() => handleEditMovement(movement)}>Editar</button>
+            <button className="movements-button" onClick={() => handleDeleteMovement(movement.id)}>Eliminar</button>
           </li>
         ))}
       </ul>
-
+  
       {editId && (
-        <div>
+        <div className="edit-section">
           <h3>Editar Movimiento</h3>
           <input
+            className="edit-input"
             type="number"
             placeholder="Nueva Cantidad"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
           />
           <input
+            className="edit-input"
             type="text"
             placeholder="Nuevo Motivo"
             value={reason}
             onChange={(e) => setReason(e.target.value)}
           />
-          <button onClick={handleUpdateMovement}>Actualizar</button>
-          <button onClick={() => setEditId(null)}>Cancelar</button>
+          <button className="movements-button" onClick={handleUpdateMovement}>Actualizar</button>
+          <button className="cancel-button" onClick={() => setEditId(null)}>Cancelar</button>
         </div>
       )}
     </div>
   );
+  
 };
 
 export default Movements;

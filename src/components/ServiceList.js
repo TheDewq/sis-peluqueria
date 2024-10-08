@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../services/firebase';
-
+import '../styles/styles.css';
 const ServiceList = ({ onSelectService }) => {
   const [services, setServices] = useState([]);
   const [selectedService, setSelectedService] = useState(null);

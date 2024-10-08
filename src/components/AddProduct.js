@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { collection, addDoc, getDocs, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '../services/firebase'; // Importa correctamente desde firebase.js
 import EditProduct from './EditProduct'; // Asegúrate de importar el componente de edición
+import '../styles/styles.css';
 
 const Inventory = () => {
   // Estado para agregar productos
@@ -83,58 +84,69 @@ const Inventory = () => {
   if (error) return <div>{error}</div>;
 
   return (
-    <div>
+    <div className="inventory-container">
       <h2>Agregar Producto</h2>
       <input
         type="text"
+        className="input-field"
         placeholder="Nombre del producto"
         value={productName}
         onChange={(e) => setProductName(e.target.value)}
       />
       <input
         type="text"
+        className="input-field"
         placeholder="Marca"
         value={brand}
         onChange={(e) => setBrand(e.target.value)}
       />
       <input
         type="number"
+        className="input-field"
         placeholder="Precio de compra"
         value={purchasePrice}
         onChange={(e) => setPurchasePrice(e.target.value)}
       />
       <input
         type="number"
+        className="input-field"
         placeholder="Precio de venta"
         value={salePrice}
         onChange={(e) => setSalePrice(e.target.value)}
       />
       <input
         type="number"
+        className="input-field"
         placeholder="Cantidad"
         value={quantity}
         onChange={(e) => setQuantity(e.target.value)}
       />
-      <button onClick={handleAddProduct}>Agregar Producto</button>
+      <button className="add-button" onClick={handleAddProduct}>Agregar Producto</button>
 
       <h2>Lista de Productos</h2>
-      <ul>
+      <ul className="product-list">
         {products.map((product, index) => (
-          <li key={index}>
-            Nombre: {product.name}, Marca: {product.brand}, Cantidad: {product.quantity}, 
-            Precio de Compra: {product.purchasePrice}$, Precio de Venta: {product.salePrice}$
+          <li key={index} className="product-item">
+            <span><strong>Nombre:</strong> {product.name}</span>, 
+            <span><strong>Marca:</strong> {product.brand}</span>, 
+            <span><strong>Cantidad:</strong> {product.quantity}</span>, 
+            <span><strong>Precio de Compra:</strong> {product.purchasePrice}$</span>, 
+            <span><strong>Precio de Venta:</strong> {product.salePrice}$</span>
             {product.quantity === 0 ? (
-              <span> (Agotado)</span>
+              <span className="out-of-stock"> (Agotado)</span>
             ) : null}
-            <button onClick={() => handleEditProduct(product.id)}>Editar</button> {/* Botón para editar */}
-            <button onClick={() => handleDeleteProduct(product.id)}>Eliminar</button> {/* Botón para eliminar */}
+            <div className="product-actions">
+              <button className="edit-button" onClick={() => handleEditProduct(product.id)}>Editar</button> 
+              <button className="delete-button" onClick={() => handleDeleteProduct(product.id)}>Eliminar</button> 
+            </div>
           </li>
         ))}
       </ul>
-      {editingProductId && <EditProduct productId={editingProductId} onClose={handleCloseEdit} />} {/* Modal de edición */}
+      {editingProductId && <EditProduct productId={editingProductId} onClose={handleCloseEdit} />} 
     </div>
   );
 };
 
 export default Inventory;
+
 

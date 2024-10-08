@@ -1,55 +1,1425 @@
-/* styles.css */
+/* Reset general */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
-    margin: 0;
-    font-family: 'Arial', sans-serif;
-  }
-  
-  .layout {
-    display: flex;
-  }
-  
+  font-family: 'Arial', sans-serif;
+  background-color: #f4f4f9;
+  color: #333;
+  line-height: 1.6;
+}
+
+/* Encabezados */
+h2, h3 {
+  color: #333;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+p {
+  margin-bottom: 1rem;
+}
+
+/* Estructura principal con flexbox */
+.layout {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 220px;
+  background-color: #e6f0ff;
+  color: white;
+  padding: 20px;
+  position: fixed; /* Sidebar fijo al lado izquierdo */
+  height: 100vh;
+  top: 0;
+  left: 0;
+  z-index: 1000; /* Mantiene el sidebar sobre el contenido */
+}
+
+.sidebar h2 {
+  color: rgb(41, 41, 41);
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar ul li {
+  margin-bottom: 10px;
+}
+
+.sidebar ul li a {
+  text-decoration: none;
+  color: #252525;
+  padding: 10px;
+  display: block;
+  transition: background 0.3s;
+}
+
+.sidebar ul li a:hover {
+  background-color: #adbcff;
+  color: #1a1a1a;
+}
+
+/* Contenido principal */
+.content {
+  margin-left: 210px; /* Espacio reservado para el sidebar */
+  padding: 20px;
+  width: calc(100% - 250px); /* Resto del espacio para el contenido */
+  background-color: #e9e9e9;
+  min-height: 100vh;
+  overflow: auto;
+}
+
+/* Dashboard */
+.dashboard {
+  padding: 2rem;
+}
+
+/* Container */
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Wrapper para estadísticas */
+.statistics-wrapper {
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Información de ventas totales */
+.statistics-wrapper p {
+  font-size: 1.2rem;
+  margin-bottom: 1.5rem;
+  color: #1d1d1d;
+}
+
+/* Botones */
+button {
+  background-color: #f237f8;
+  color: white;
+  border: none;
+  padding: 0.5rem 0.8rem;
+  font-size: 1rem;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+button:hover {
+  background-color: #b32fff;
+}
+
+button.delete {
+  background-color: #e72c1e;
+}
+
+button.delete:hover {
+  background-color: #d32f2f;
+}
+
+/* Lista de ventas */
+.sales-list {
+  list-style: none;
+  margin-top: 2rem;
+}
+
+.sales-list li {
+  background-color: #dd2424;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sales-list li p {
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+/* Lista de productos y servicios */
+.sales-list li ul {
+  margin-top: 1rem;
+  list-style: disc inside;
+}
+
+.sales-list li ul li {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+/* Estilos para tablas */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 2rem;
+}
+
+table, th, td {
+  border: 1px solid #303030;
+}
+
+th, td {
+  padding: 1rem;
+  text-align: left;
+}
+
+th {
+  background-color: #899fff;
+  color: rgb(255, 255, 255);
+}
+
+td {
+  background-color: #f9f9f9;
+}
+
+tr:hover td {
+  background-color: #f1f1f1;
+}
+
+/* Formularios */
+form {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(32, 32, 32, 0.1);
+}
+
+form label {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  display: block;
+  color: #333;
+}
+
+form input, form select {
+  width: 100%;
+  padding: 0.7rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+form input:focus, form select:focus {
+  outline: none;
+  border-color: #4CAF50;
+  box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+}
+
+form button {
+  width: 100%;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 1rem;
+  font-size: 1.2rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+form button:hover {
+  background-color: #45a049;
+}
+
+/* Responsivo para pantallas pequeñas */
+@media (max-width: 768px) {
   .sidebar {
-    width: 250px;
-    background-color: #dfdfdf;
-    padding: 20px;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    position: relative; /* El sidebar se vuelve estático en pantallas pequeñas */
+    height: auto;
+    z-index: 0;
   }
-  
-  .sidebar h2 {
-    color: #fc568d; /* Color atractivo */
-  }
-  
-  .sidebar ul {
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  .sidebar ul li {
-    margin: 15px 0;
-  }
-  
-  .sidebar ul li a {
-    text-decoration: none;
-    color: #333;
-    font-weight: bold;
-  }
-  
+
   .content {
-    padding: 20px;
-    flex-grow: 1;
+    margin-left: 0;
+    width: 100%;
   }
-  
-  button {
-    background-color: #ff4081; /* Botón colorido */
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    cursor: pointer;
-    border-radius: 5px;
-    transition: background-color 0.3s;
+}
+
+/* CSS para CalendarioCitas */
+.contenedor-calendario {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.fc {
+  font-family: 'Arial', sans-serif;
+  font-size: 0.85rem;
+}
+
+.fc-toolbar-title {
+  font-size: 1.5rem;
+}
+
+.fc-header-toolbar {
+  margin-bottom: 1rem;
+}
+
+.fc-daygrid-event, .fc-timegrid-event {
+  font-size: 0.75rem; /* Hacer los eventos más pequeños */
+}
+
+.fc-button {
+  padding: 0.5rem 0.75rem;
+}
+
+.fc-col-header-cell-cushion {
+  padding: 0.5rem;
+}
+
+.fc-timegrid-slot {
+  height: 1.5rem; /* Reducir la altura de las horas */
+}
+
+.fc-view-harness {
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+}
+
+/* Estilo general del componente */
+.detalles-cliente {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 5px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Títulos */
+h3 {
+  color: #16181a;
+}
+
+/* Estilos para el filtro de fecha */
+.filtro-fecha {
+  margin-bottom: 20px;
+}
+
+.filtro-fecha label {
+  font-weight: bold;
+}
+
+.filtro-fecha input {
+  margin-left: 10px;
+  padding: 5px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+}
+
+/* Estilo de la tarjeta de citas */
+.cita-card {
+  padding: 15px;
+  margin-bottom: 10px;
+  background-color: #ffffff;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  transition: box-shadow 0.2s;
+}
+
+.cita-card:hover {
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Acciones de citas */
+.cita-actions {
+  margin-top: 10px;
+}
+
+/* Estilos de los botones */
+.btn {
+  padding: 5px 10px;
+  margin-right: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.btn-edit {
+  background-color: #007bff; /* Color para editar */
+  color: white;
+}
+
+.btn-edit:hover {
+  background-color: #0056b3; /* Color más oscuro en hover */
+}
+
+.btn-delete {
+  background-color: #eb2337; /* Color para eliminar */
+  color: white;
+}
+
+.btn-delete:hover {
+  background-color: #631018; /* Color más oscuro en hover */
+}
+
+/* Estilo del modal */
+.modal {
+  display: none; /* Oculto por defecto */
+  position: fixed; 
+  z-index: 1000; 
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto; 
+  background-color: rgb(0,0,0); 
+  background-color: rgba(0,0,0,0.4); 
+  padding-top: 60px; 
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 5% auto; 
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%; 
+  border-radius: 5px;
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: rgb(0, 0, 0);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* Respuesta en el modal */
+.response-message {
+  margin-top: 20px;
+  font-size: 1rem;
+  color: green;
+}
+
+/* General Styles */
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: #f4f4f9;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+h2, h3 {
+  color: #333;
+  margin-bottom: 20px;
+}
+
+/* Search Section */
+.search-section {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 30px;
+}
+
+.search-section input {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.item-list {
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #fff;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.item-list div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 0;
+}
+
+.item-list div p {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.item-list div button {
+  padding: 5px 10px;
+  font-size: 14px;
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.item-list div button:hover {
+  background-color: #218838;
+}
+
+/* Sales Section Layout */
+.sales-section {
+  display: flex;
+  justify-content: space-between;
+  gap: 40px;
+}
+
+/* Selected Items (Left Section) */
+.left-section {
+  width: 60%;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.left-section h3 {
+  margin-bottom: 15px;
+}
+
+.selected-items {
+  max-height: 400px;
+  overflow-y: auto;
+  border-top: 1px solid #ddd;
+  padding-top: 15px;
+}
+
+.selected-items div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.selected-items div p {
+  font-size: 16px;
+  margin: 0;
+}
+
+.selected-items input {
+  width: 50px;
+  padding: 5px;
+  font-size: 16px;
+  margin-left: 10px;
+  text-align: center;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.selected-items button {
+  padding: 5px 10px;
+  font-size: 14px;
+  background-color: #dc3545;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.selected-items button:hover {
+  background-color: #c82333;
+}
+
+/* Payment and Customer (Right Section) */
+.right-section {
+  width: 40%;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.customer-section {
+  margin-bottom: 20px;
+}
+
+.customer-section select {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  margin-bottom: 15px;
+}
+
+.payment-section {
+  text-align: right;
+}
+
+.payment-section h3 {
+  font-size: 20px;
+  margin-bottom: 20px;
+}
+
+.payment-section input {
+  width: 100%;
+  padding: 10px;
+  font-size: 18px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.payment-section button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.payment-section button:hover {
+  background-color: #0056b3;
+}
+
+
+
+
+
+/* Statistics Section */
+.statistics-container {
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.statistics-container h2,
+.statistics-container h3 {
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.statistics-container h2 {
+  font-size: 2em;
+}
+
+.statistics-container h3 {
+  font-size: 1.5em;
+  margin-top: 30px;
+}
+
+/* Summary of Sales */
+.statistics-summary {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.statistics-card {
+  flex: 1;
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.statistics-card p {
+  font-size: 1.3em;
+  color: #555;
+  margin: 10px 0;
+}
+
+.statistics-card span {
+  font-size: 2em;
+  font-weight: bold;
+  color: #2196F3;
+}
+
+/* Sales List */
+.sales-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sales-list li {
+  background-color: #fafafa;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.sales-list li p {
+  margin: 0;
+  font-size: 1.2em;
+  color: #444;
+}
+
+.sales-list ul {
+  margin: 10px 0;
+  padding: 0 20px;
+}
+
+.sales-list ul li {
+  list-style-type: disc;
+  color: #777;
+  font-size: 1em;
+}
+
+.sales-list button {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.sales-list button:hover {
+  background-color: #e53935;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .statistics-summary {
+    flex-direction: column;
   }
-  
-  button:hover {
-    background-color: #e91e63; /* Color al pasar el mouse */
+
+  .statistics-card {
+    margin-bottom: 20px;
   }
-  
+}
+
+
+
+
+
+
+/* Estilo para la sección de inventario */
+.inventory-container {
+  width: 80%;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.inventory-container h2 {
+  text-align: center;
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.input-field {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  color: #333;
+}
+
+.add-button {
+  width: 100%;
+  padding: 12px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s;
+}
+
+.add-button:hover {
+  background-color: #45a049;
+}
+
+.product-list {
+  list-style: none;
+  padding: 0;
+}
+
+.product-item {
+  background-color: #fff;
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.product-item span {
+  margin-right: 10px;
+}
+
+.out-of-stock {
+  color: red;
+  font-weight: bold;
+}
+
+.product-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.edit-button {
+  background-color: #ff9800;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  font-size: 14px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.edit-button:hover {
+  background-color: #fb8c00;
+}
+
+.delete-button {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  font-size: 14px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.delete-button:hover {
+  background-color: #d32f2f;
+}
+
+
+
+
+
+
+
+
+/* Contenedor principal para la sección de servicios */
+.service-container {
+  width: 80%;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f5f5f5;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.service-container h2 {
+  text-align: center;
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+/* Inputs */
+.service-container input {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  background-color: #fff;
+}
+
+/* Botón para añadir/actualizar servicio */
+.service-container button {
+  width: 100%;
+  padding: 12px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s;
+}
+
+.service-container button:hover {
+  background-color: #45a049;
+}
+
+/* Lista de servicios */
+.service-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 20px;
+}
+
+.service-list li {
+  background-color: #fff;
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: column;
+}
+
+/* Elemento de la lista */
+.service-item {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.service-item div {
+  flex: 1;
+}
+
+.service-item strong {
+  display: block;
+  font-size: 16px;
+  color: #555;
+}
+
+.service-item p {
+  margin: 5px 0 0;
+  font-size: 18px;
+  color: #333;
+}
+
+/* Botones de acción */
+.service-actions {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.service-actions button {
+  background-color: #2196F3;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  font-size: 14px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-left: 10px;
+}
+
+.service-actions button:hover {
+  background-color: #1e88e5;
+}
+
+.service-actions .delete-button {
+  background-color: #f44336;
+}
+
+.service-actions .delete-button:hover {
+  background-color: #d32f2f;
+}
+
+
+
+
+
+
+
+
+/* Contenedor principal para la gestión de clientes */
+.customer-container {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.customer-form {
+  margin-bottom: 20px;
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+.customer-form h3 {
+  margin-bottom: 10px;
+  font-size: 1.2em;
+}
+
+.customer-form input {
+  display: block;
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.customer-form button {
+  padding: 10px 15px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.customer-form button:hover {
+  background-color: #45a049;
+}
+
+.customer-list {
+  margin-top: 20px;
+}
+
+.customer-list h3 {
+  margin-bottom: 15px;
+  font-size: 1.4em;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+.customer-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background-color: #fff;
+}
+
+.customer-item div {
+  display: flex;
+  flex-direction: column;
+}
+
+.customer-item strong {
+  font-weight: bold;
+  margin-right: 5px;
+}
+
+.customer-item p {
+  margin: 5px 0;
+}
+
+.customer-item button {
+  margin-left: 10px;
+  padding: 8px 12px;
+  background-color: #f44336;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.customer-item button.edit {
+  background-color: #2196f3;
+}
+
+.customer-item button:hover {
+  opacity: 0.9;
+}
+
+.button-container {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.error {
+  color: red;
+  margin-top: 10px;
+}
+
+
+
+
+
+
+
+
+
+
+
+.cash-register-container {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+.cash-register-container h2 {
+  text-align: center;
+  font-size: 2em;
+  margin-bottom: 20px;
+}
+
+.total-info {
+  margin-bottom: 20px;
+  padding: 15px;
+  border: 1px solid #4caf50;
+  border-radius: 8px;
+  background-color: #e8f5e9;
+}
+
+.total-info p {
+  font-size: 1.2em;
+  margin: 5px 0;
+}
+
+.register-movement {
+  margin-bottom: 20px;
+  padding: 15px;
+  border: 1px solid #2196f3;
+  border-radius: 8px;
+  background-color: #e3f2fd;
+}
+
+.register-movement h3 {
+  margin-bottom: 10px;
+  font-size: 1.5em;
+}
+
+.register-movement select,
+.register-movement input {
+  display: block;
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.register-movement button {
+  padding: 10px 15px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.register-movement button:hover {
+  background-color: #45a049;
+}
+
+.movements-list {
+  margin-top: 20px;
+}
+
+.movements-list h3 {
+  margin-bottom: 10px;
+  font-size: 1.5em;
+}
+
+.movements-list ul {
+  list-style: none;
+  padding: 0;
+}
+
+.movements-list li {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background-color: #fff;
+}
+
+.movements-list li:nth-child(odd) {
+  background-color: #f9f9f9; /* Alterna el color de fondo */
+}
+
+.movements-list li span {
+  font-weight: bold;
+}
+
+.error {
+  color: red;
+  margin-top: 10px;
+}
+
+
+
+
+
+
+
+
+
+
+/* Estilos para la sección de Registro de Movimientos */
+.movements-container {
+  max-width: 600px; /* Ancho máximo de la sección */
+  margin: 20px auto; /* Centrar la sección */
+  padding: 20px; /* Espaciado interno */
+  background-color: #f9f9f9; /* Color de fondo */
+  border-radius: 8px; /* Bordes redondeados */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+}
+
+.movements-title {
+  text-align: center; /* Centrar el título */
+  color: #333; /* Color del texto */
+  margin-bottom: 20px; /* Espacio debajo del título */
+}
+
+.movements-list {
+  list-style-type: none; /* Quitar viñetas */
+  padding: 0; /* Quitar padding */
+  margin: 0; /* Quitar margen */
+}
+
+.movements-item {
+  padding: 15px; /* Espaciado interno de cada ítem */
+  border-bottom: 1px solid #ddd; /* Línea separadora */
+  display: flex; /* Usar flexbox para alinear */
+  justify-content: space-between; /* Espacio entre contenido */
+  align-items: center; /* Centrar verticalmente */
+  color: #555; /* Color del texto */
+  transition: background-color 0.3s; /* Transición suave */
+}
+
+.movements-item:hover {
+  background-color: #f1f1f1; /* Color al pasar el ratón */
+}
+
+.movements-button {
+  background-color: #007bff; /* Color del botón */
+  color: white; /* Color del texto del botón */
+  border: none; /* Sin borde */
+  padding: 8px 12px; /* Espaciado interno */
+  border-radius: 5px; /* Bordes redondeados */
+  cursor: pointer; /* Cambiar cursor */
+  transition: background-color 0.3s; /* Transición suave */
+}
+
+.movements-button:hover {
+  background-color: #0056b3; /* Color del botón al pasar el ratón */
+}
+
+.edit-section {
+  margin-top: 20px; /* Espacio encima de la sección de edición */
+}
+
+.edit-input {
+  padding: 8px; /* Espaciado interno */
+  margin: 5px 0; /* Margen vertical */
+  border: 1px solid #ccc; /* Borde gris */
+  border-radius: 4px; /* Bordes redondeados */
+  width: 100%; /* Ancho completo */
+  box-sizing: border-box; /* Incluir padding en el ancho */
+}
+
+.edit-input:focus {
+  border-color: #007bff; /* Borde azul al enfocar */
+  outline: none; /* Sin contorno */
+}
+
+.cancel-button {
+  background-color: #dc3545; /* Color de fondo rojo */
+  margin-left: 10px; /* Espacio entre botones */
+}
+
+.cancel-button:hover {
+  background-color: #c82333; /* Color al pasar el ratón */
+}
+
+
+
+
+
+
+
+
+/* styles.css */
+
+/* Estilos generales para el componente DetallesCliente */
+.detalles-cliente {
+  max-width: 800px; /* Ancho máximo del contenedor */
+  margin: 20px auto; /* Centrar el contenedor */
+  padding: 20px; /* Espaciado interno */
+  border: 1px solid #ccc; /* Borde gris claro */
+  border-radius: 8px; /* Bordes redondeados */
+  background-color: #f9f9f9; /* Fondo gris claro */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+}
+
+h3 {
+  text-align: center; /* Centrar el título */
+  color: #333; /* Color del título */
+}
+
+.filtro-fecha {
+  margin-bottom: 20px; /* Espaciado inferior */
+}
+
+input[type="date"],
+input[type="text"],
+input[type="tel"],
+input[type="datetime-local"] {
+  width: 100%; /* Ancho completo */
+  padding: 10px; /* Espaciado interno */
+  margin: 10px 0; /* Espaciado superior e inferior */
+  border: 1px solid #ccc; /* Borde gris claro */
+  border-radius: 4px; /* Bordes redondeados */
+}
+
+.cita-card {
+  border: 1px solid #ddd; /* Borde gris claro */
+  border-radius: 4px; /* Bordes redondeados */
+  padding: 15px; /* Espaciado interno */
+  margin-bottom: 15px; /* Espaciado inferior */
+  background-color: #fff; /* Fondo blanco */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+}
+
+.cita-actions {
+  display: flex; /* Flexbox para alinear botones */
+  justify-content: space-between; /* Espacio entre botones */
+}
+
+.btn {
+  padding: 10px 15px; /* Espaciado interno */
+  border: none; /* Sin borde */
+  border-radius: 4px; /* Bordes redondeados */
+  cursor: pointer; /* Cursor de puntero */
+  transition: background-color 0.3s; /* Transición suave para el color de fondo */
+}
+
+.btn-edit {
+  background-color: #007bff; /* Color azul */
+  color: white; /* Texto blanco */
+}
+
+.btn-edit:hover {
+  background-color: #0056b3; /* Azul más oscuro al pasar el ratón */
+}
+
+.btn-delete {
+  background-color: #dc3545; /* Color rojo */
+  color: white; /* Texto blanco */
+}
+
+.btn-delete:hover {
+  background-color: #c82333; /* Rojo más oscuro al pasar el ratón */
+}
+
+.btn-save {
+  background-color: #28a745; /* Color verde */
+  color: white; /* Texto blanco */
+}
+
+.btn-save:hover {
+  background-color: #218838; /* Verde más oscuro al pasar el ratón */
+}
+
+.btn-cancel {
+  background-color: #6c757d; /* Color gris */
+  color: white; /* Texto blanco */
+}
+
+.btn-cancel:hover {
+  background-color: #5a6268; /* Gris más oscuro al pasar el ratón */
+}
+
+.editar-cita {
+  border-top: 1px solid #ddd; /* Línea superior */
+  padding-top: 20px; /* Espaciado superior */
+  margin-top: 20px; /* Margen superior */
+}
+
+
+
+
+
+
+
+/* src/components/Modal.css */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  max-width: 400px;
+  width: 100%;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: space-between;
+}
+
+
+

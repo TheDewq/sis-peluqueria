@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { collection, getDocs, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '../services/firebase';
+import '../styles/styles.css';
 
 const Statistics = () => {
   const [sales, setSales] = useState([]);
@@ -8,7 +9,7 @@ const Statistics = () => {
   const [totalProductSales, setTotalProductSales] = useState(0);
   const [totalServiceSales, setTotalServiceSales] = useState(0);
   const [totalProfit, setTotalProfit] = useState(0);
-  const [productsMap, setProductsMap] = useState({}); // Para almacenar los productos y sus nombres
+  const [productsMap, setProductsMap] = useState({});
 
   useEffect(() => {
     const fetchSales = async () => {
@@ -22,40 +23,36 @@ const Statistics = () => {
       let totalServiceAmount = 0;
       let totalProfitAmount = 0;
 
-      // Crear un mapa para los productos
       const productsCollection = collection(db, 'products');
       const productsSnapshot = await getDocs(productsCollection);
       const productsList = productsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       const productMap = productsList.reduce((acc, product) => {
-        acc[product.id] = product.name; // Asigna el nombre al ID del producto
+        acc[product.id] = product.name;
         return acc;
       }, {});
-      setProductsMap(productMap); // Almacena el mapa de productos
+      setProductsMap(productMap);
 
-      
       salesList.forEach(sale => {
         totalSalesAmount += sale.totalAmount || 0;
-      
-        // Calcular ventas de productos
+
         if (Array.isArray(sale.items)) {
           sale.items.forEach(item => {
             const itemTotal = (item.salePrice || 0) * (item.quantity || 0); 
             totalProductAmount += itemTotal;
-      
+
             const itemPurchasePrice = (item.purchasePrice || 0) * (item.quantity || 0); 
             totalProfitAmount += (itemTotal - itemPurchasePrice); 
           });
         }
-      
-        // Calcular ventas de servicios
+
         if (Array.isArray(sale.services)) {
           sale.services.forEach(service => {
-            const serviceTotal = (service.price || 0) * (service.quantity || 1); // Multiplica el precio del servicio por la cantidad
-            totalServiceAmount += serviceTotal; // Suma al total de servicios
+            const serviceTotal = (service.price || 0) * (service.quantity || 1);
+            totalServiceAmount += serviceTotal;
+            totalProfitAmount += serviceTotal - (service.purchasePrice || 0) * (service.quantity || 1);
           });
         }
       });
-      
 
       setTotalSales(totalSalesAmount);
       setTotalProductSales(totalProductAmount);
@@ -69,30 +66,50 @@ const Statistics = () => {
   const handleDeleteSale = async (saleId) => {
     const saleDoc = doc(db, 'sales', saleId);
     await deleteDoc(saleDoc);
-    setSales(sales.filter(sale => sale.id !== saleId)); // Actualizar el estado local
+    setSales(sales.filter(sale => sale.id !== saleId));
     alert('Venta eliminada con éxito.');
   };
 
   return (
-    <div>
+    <div className="statistics-container">
       <h2>Estadísticas</h2>
-      <p>Total de Ventas: {totalSales}$</p>
-      <p>Total de Ventas de Productos: {totalProductSales}$</p>
-      <p>Total de Ventas de Servicios: {totalServiceSales}$</p>
-      <p>Ganancia Total de Productos: {totalProfit}$</p>
+
+      <div className="statistics-summary">
+        <div className="statistics-card">
+          <p>Total de Ventas</p>
+          <span>{totalSales}$</span>
+        </div>
+        <div className="statistics-card">
+          <p>Total de Ventas de Productos</p>
+          <span>{totalProductSales}$</span>
+        </div>
+        <div className="statistics-card">
+          <p>Total de Ventas de Servicios</p>
+          <span>{totalServiceSales}$</span>
+        </div>
+        <div className="statistics-card">
+          <p>Ganancia Total de Productos</p>
+          <span>{totalProfit}$</span>
+        </div>
+      </div>
 
       <h3>Resumen de Ventas</h3>
-      <ul>
+      <ul className="sales-list">
         {sales.map((sale, index) => {
           const productCount = sale.items ? sale.items.length : 0;
           const serviceCount = sale.services ? sale.services.length : 0;
 
-          const saleProfit = sale.items ? 
+          const saleProfit = (sale.items ? 
             sale.items.reduce((acc, item) => {
-              const itemTotal = item.salePrice * item.quantity || 0;
-              const itemPurchasePrice = item.purchasePrice * item.quantity || 0;
+              const itemTotal = (item.salePrice || 0) * (item.quantity || 0);
+              const itemPurchasePrice = (item.purchasePrice || 0) * (item.quantity || 0);
               return acc + (itemTotal - itemPurchasePrice);
-            }, 0) : 0;
+            }, 0) : 0) + (sale.services ? 
+            sale.services.reduce((acc, service) => {
+              const serviceTotal = (service.price || 0) * (service.quantity || 1);
+              const servicePurchasePrice = (service.purchasePrice || 0) * (service.quantity || 1);
+              return acc + (serviceTotal - servicePurchasePrice);
+            }, 0) : 0);
 
           return (
             <li key={index}>
@@ -101,6 +118,9 @@ const Statistics = () => {
                 <ul>
                   {sale.items.map((item) => (
                     <li key={item.id}>{productsMap[item.id]} - {item.quantity} unidades</li>
+                  ))}
+                  {sale.services && sale.services.map((service) => (
+                    <li key={service.id}>{service.name} - {service.quantity} unidades</li>
                   ))}
                 </ul>
                 <button onClick={() => handleDeleteSale(sale.id)}>Eliminar</button>
@@ -114,29 +134,3 @@ const Statistics = () => {
 };
 
 export default Statistics;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

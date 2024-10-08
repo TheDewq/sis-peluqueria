@@ -1,4 +1,5 @@
 import React from 'react';
+import '../styles/styles.css';
 
 const Receipt = React.forwardRef(({ items, total, payment, change, customer }, ref) => {
   return (

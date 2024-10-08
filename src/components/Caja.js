@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { collection, getDocs, addDoc, onSnapshot } from 'firebase/firestore';
 import { db } from '../services/firebase';
+import '../styles/styles.css'; // Asegúrate de que este archivo CSS contenga los nuevos estilos
 
 const CashRegister = () => {
   const [totalSales, setTotalSales] = useState(0); // Total de ventas
@@ -124,14 +125,14 @@ const CashRegister = () => {
   };
 
   return (
-    <div>
+    <div className="cash-register-container">
       <h2>Caja</h2>
-      <div>
+      <div className="total-info">
         <p>Total de ventas: {totalSales.toFixed(2)} $</p>
         <p>Dinero actual en caja: {cashInBox.toFixed(2)} $</p>
       </div>
 
-      <div>
+      <div className="register-movement">
         <h3>Registrar Movimiento</h3>
         <select value={movementType} onChange={(e) => setMovementType(e.target.value)}>
           <option value="entrada">Entrada</option>
@@ -152,14 +153,15 @@ const CashRegister = () => {
         <button onClick={handleAddMovement}>Registrar</button>
       </div>
 
-      <div>
+      <div className="movements-list">
         <h3>Movimientos</h3>
         <ul>
           {movements.map(movement => (
             <li key={movement.id}>
-              {movement.type === 'entrada' ? 'Entrada' : 'Salida'} - {movement.amount.toFixed(2)} $
-              (Motivo: {movement.reason}) - 
-              {movement.createdAt ? new Date(movement.createdAt.seconds * 1000).toLocaleDateString() : 'Fecha no disponible'}
+              <span>{movement.type === 'entrada' ? 'Entrada' : 'Salida'}</span>
+              <span>{movement.amount.toFixed(2)} $</span>
+              <span>(Motivo: {movement.reason})</span>
+              <span>{movement.createdAt ? new Date(movement.createdAt.seconds * 1000).toLocaleDateString() : 'Fecha no disponible'}</span>
             </li>
           ))}
         </ul>
@@ -169,6 +171,7 @@ const CashRegister = () => {
 };
 
 export default CashRegister;
+
 
 
 

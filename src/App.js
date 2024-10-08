@@ -14,6 +14,8 @@ import Movimientos from './components/Movimientos';
 import Login from './views/Login';
 import CustomerManagement from './components/CustomerManagement';
 import Receipt from './components/Receipt';
+import AppointmentCalendar from './components/AppointmentCalendar';
+import DetallesCliente from './components/DetallesCliente';
 
 const App = () => {
   return (
@@ -30,6 +32,8 @@ const App = () => {
           <Route path="/movimientos" element={<Movimientos />} />
           <Route path="/login" element={<Login/>} />
           <Route path="/receip" element={<Receipt/>} />
+          <Route path="/appointments" element={<AppointmentCalendar />} />
+          <Route path="/detallescliente" element={<DetallesCliente />} />
         </Routes>
       </Layout>
     </Router>
