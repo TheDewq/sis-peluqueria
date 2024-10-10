@@ -36,12 +36,24 @@ const Sales = () => {
     fetchItems();
   }, []);
 
-  const handleAddItem = (item, quantity) => {
+  const handleAddItem = async (item, quantity) => {
     if (quantity <= 0) return;
-
+  
+    if (item.type === 'product') {
+      // Obtener el producto de Firebase para verificar el stock
+      const productRef = doc(db, 'products', item.id);
+      const productDoc = await getDoc(productRef);
+      const availableStock = productDoc.data().quantity;
+  
+      if (quantity > availableStock) {
+        alert(`No hay suficiente stock para ${item.name}. Stock disponible: ${availableStock}`);
+        return; // No permite añadir el producto si no hay suficiente stock
+      }
+    }
+  
     const existingItemIndex = selectedItems.findIndex(selected => selected.id === item.id);
     const itemToAdd = { ...item, quantity };
-
+  
     if (existingItemIndex > -1) {
       const updatedItems = [...selectedItems];
       updatedItems[existingItemIndex].quantity += quantity;
@@ -49,10 +61,11 @@ const Sales = () => {
     } else {
       setSelectedItems([...selectedItems, itemToAdd]);
     }
-
+  
     const itemPrice = item.salePrice || item.servicePrice || item.price;
     setTotal(prevTotal => prevTotal + itemPrice * quantity);
   };
+  
 
   const handleEditItemQuantity = (itemId, newQuantity) => {
     if (newQuantity < 1) return;
@@ -95,8 +108,9 @@ const Sales = () => {
   };
 
   const handleGenerateSale = async () => {
-    if (!selectedCustomer) {
-      alert('Debe seleccionar un cliente para generar la venta.');
+    // Permitir venta sin cliente, pero mostrar alerta si el total es cero
+    if (total <= 0) {
+      alert('No se ha agregado ningún item para generar la venta.');
       return;
     }
 
@@ -110,7 +124,7 @@ const Sales = () => {
       totalAmount: total,
       payment: customerPayment,
       change: change,
-      customer: selectedCustomer,
+      customer: selectedCustomer ? selectedCustomer : { name: 'Cliente Final' }, // Agregar "Cliente Final" si no hay cliente
       date: new Date(),
     });
 
@@ -148,13 +162,18 @@ const Sales = () => {
   const handleSearch = (e) => {
     const searchTerm = e.target.value.toLowerCase();
     setSearchTerm(searchTerm);
-
+  
     const filtered = [...products, ...services].filter(item =>
-      (item.name?.toLowerCase().includes(searchTerm) || item.serviceName?.toLowerCase().includes(searchTerm))
+      (item.name?.toLowerCase().includes(searchTerm) || 
+       item.brand?.toLowerCase().includes(searchTerm) || // Agregamos búsqueda por marca
+       item.serviceName?.toLowerCase().includes(searchTerm) || 
+       (item.salePrice && item.salePrice.toString().includes(searchTerm)) || // Agregamos búsqueda por precio de producto
+       (item.servicePrice && item.servicePrice.toString().includes(searchTerm))) // Agregamos búsqueda por precio de servicio
     );
-
+  
     setFilteredItems(filtered);
   };
+  
 
   const handleCustomerSelect = (e) => {
     const customerId = e.target.value;
@@ -176,19 +195,24 @@ const Sales = () => {
           onChange={handleSearch}
         />
         {searchTerm && filteredItems.length > 0 && (
-          <div className="item-list">
-            {filteredItems.map(item => (
-              <div key={item.id}>
-                <p>{item.serviceName || item.name} - {item.servicePrice || item.salePrice || item.price}$</p>
-                <button onClick={() => {
-                  handleAddItem(item, 1);
-                  setSearchTerm('');
-                  setFilteredItems([...products, ...services]);
-                }}>Agregar</button>
-              </div>
-            ))}
-          </div>
-        )}
+  <div className="item-list">
+    {filteredItems.map(item => (
+      <div key={item.id}>
+        <p>
+          {item.serviceName || item.name} - 
+          {item.brand ? ` ${item.brand} -` : ''} 
+          {item.servicePrice || item.salePrice || item.price}$
+        </p>
+        <button onClick={() => {
+          handleAddItem(item, 1);
+          setSearchTerm('');
+          setFilteredItems([...products, ...services]);
+        }}>Agregar</button>
+      </div>
+    ))}
+  </div>
+)}
+
       </div>
 
       <div className="sales-section">
@@ -196,33 +220,32 @@ const Sales = () => {
         <div className="left-section">
           <h3>Items Seleccionados</h3>
           <div className="selected-items">
-            {selectedItems.map(item => (
-              <div key={item.id}>
-                <p>
-                  {item.serviceName || item.name} - {item.quantity} x {item.servicePrice || item.salePrice || item.price}$
-                </p>
-                <input
-                  type="number"
-                  min="1"
-                  value={item.quantity}
-                  onChange={(e) => handleEditItemQuantity(item.id, parseInt(e.target.value))}
-                />
-                <button onClick={() => handleRemoveItem(item.id)}>Eliminar</button>
-              </div>
-            ))}
-          </div>
+  {selectedItems.map(item => (
+    <div key={item.id} className="selected-item">
+      <p>
+        {item.serviceName || item.name} {item.brand ? `(${item.brand})` : ''} -  {item.servicePrice || item.salePrice || item.price}$
+      </p>
+      <input
+        type="number"
+        min="1"
+        value={item.quantity}
+        onChange={(e) => handleEditItemQuantity(item.id, parseInt(e.target.value))}
+      />
+      <button onClick={() => handleRemoveItem(item.id)}>Eliminar</button>
+    </div>
+  ))}
+</div>
+
         </div>
 
         {/* Sección derecha: Total, cliente, pago y generar venta */}
         <div className="right-section">
           <div className="customer-section">
             <h3>Seleccionar Cliente</h3>
-            <select onChange={handleCustomerSelect} value={selectedCustomer ? selectedCustomer.id : ''}>
-              <option value="" disabled>Seleccione un cliente</option>
+            <select onChange={handleCustomerSelect} value={selectedCustomer ? selectedCustomer.id : 'finalCustomer'}>
+              <option value="finalCustomer">Cliente Final</option>
               {customers.map(customer => (
-                <option key={customer.id} value={customer.id}>
-                  {customer.name} - {customer.email}
-                </option>
+                <option key={customer.id} value={customer.id}>{customer.name}</option>
               ))}
             </select>
           </div>
@@ -241,19 +264,20 @@ const Sales = () => {
         </div>
       </div>
 
-      {/* Componente de recibo para imprimir */}
-      <div style={{ display: 'none' }}>
-        <div ref={printRef}>
-          <Receipt
-            items={selectedItems}
-            total={total}
-            payment={customerPayment}
-            change={change}
-            customer={selectedCustomer}
-          />
-        </div>
+      {/* Sección de recibo (para impresión) */}
+      {/* Sección de recibo (para impresión) */}
+<div ref={printRef} style={{ display: 'none' }}>
+  <Receipt 
+    items={selectedItems} 
+    total={total}  
+    payment={customerPayment}
+    change={change}
+    customer={selectedCustomer}  
+  />
+</div>
+
       </div>
-    </div>
+    
   );
 };
 

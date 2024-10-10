@@ -1,45 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { collection, addDoc, getDocs, deleteDoc, doc } from 'firebase/firestore';
+import { collection, getDocs, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '../services/firebase'; // Importa correctamente desde firebase.js
 import EditProduct from './EditProduct'; // Asegúrate de importar el componente de edición
+import AddProductModal from './AddProductModal'; // Importa el nuevo modal
 import '../styles/styles.css';
 
 const Inventory = () => {
-  // Estado para agregar productos
-  const [productName, setProductName] = useState('');
-  const [brand, setBrand] = useState('');
-  const [purchasePrice, setPurchasePrice] = useState(0);
-  const [salePrice, setSalePrice] = useState(0);
-  const [quantity, setQuantity] = useState(0);
-  
   // Estado para la lista de productos
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [editingProductId, setEditingProductId] = useState(null); // Estado para manejar la edición
-
-  const handleAddProduct = async () => {
-    try {
-      await addDoc(collection(db, 'products'), {
-        name: productName,
-        brand: brand,
-        purchasePrice: parseFloat(purchasePrice),
-        salePrice: parseFloat(salePrice),
-        quantity: parseInt(quantity),
-        createdAt: new Date(),
-      });
-      alert('Producto agregado exitosamente');
-      // Reinicia los campos después de agregar
-      setProductName('');
-      setBrand('');
-      setPurchasePrice(0);
-      setSalePrice(0);
-      setQuantity(0);
-      fetchProducts(); // Actualiza la lista después de agregar
-    } catch (error) {
-      console.error('Error al agregar producto:', error);
-    }
-  };
+  const [isModalOpen, setIsModalOpen] = useState(false); // Estado para controlar el modal
 
   const fetchProducts = async () => {
     try {
@@ -80,49 +52,24 @@ const Inventory = () => {
     fetchProducts(); // Actualiza la lista después de editar
   };
 
+  const handleOpenModal = () => {
+    setIsModalOpen(true); // Abre el modal para agregar productos
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false); // Cierra el modal
+  };
+
+  const handleProductAdded = () => {
+    fetchProducts(); // Actualiza la lista después de agregar un producto
+  };
+
   if (loading) return <div>Cargando productos...</div>;
   if (error) return <div>{error}</div>;
 
   return (
     <div className="inventory-container">
-      <h2>Agregar Producto</h2>
-      <input
-        type="text"
-        className="input-field"
-        placeholder="Nombre del producto"
-        value={productName}
-        onChange={(e) => setProductName(e.target.value)}
-      />
-      <input
-        type="text"
-        className="input-field"
-        placeholder="Marca"
-        value={brand}
-        onChange={(e) => setBrand(e.target.value)}
-      />
-      <input
-        type="number"
-        className="input-field"
-        placeholder="Precio de compra"
-        value={purchasePrice}
-        onChange={(e) => setPurchasePrice(e.target.value)}
-      />
-      <input
-        type="number"
-        className="input-field"
-        placeholder="Precio de venta"
-        value={salePrice}
-        onChange={(e) => setSalePrice(e.target.value)}
-      />
-      <input
-        type="number"
-        className="input-field"
-        placeholder="Cantidad"
-        value={quantity}
-        onChange={(e) => setQuantity(e.target.value)}
-      />
-      <button className="add-button" onClick={handleAddProduct}>Agregar Producto</button>
-
+      <button className="add-button" onClick={handleOpenModal}>Agregar Producto</button>
       <h2>Lista de Productos</h2>
       <ul className="product-list">
         {products.map((product, index) => (
@@ -142,11 +89,16 @@ const Inventory = () => {
           </li>
         ))}
       </ul>
-      {editingProductId && <EditProduct productId={editingProductId} onClose={handleCloseEdit} />} 
+      {editingProductId && <EditProduct productId={editingProductId} onClose={handleCloseEdit} />}
+      {isModalOpen && (
+        <AddProductModal onClose={handleCloseModal} onProductAdded={handleProductAdded} />
+      )}
     </div>
   );
 };
 
 export default Inventory;
+
+
 
 

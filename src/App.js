@@ -22,6 +22,7 @@ const App = () => {
     <Router>
       <Layout>
         <Routes>
+          {/* Rutas principales de la aplicación */}
           <Route path="/" element={<Dashboard />} />
           <Route path="/sales" element={<Sales />} />
           <Route path="/statistics" element={<Statistics />} />
@@ -30,10 +31,12 @@ const App = () => {
           <Route path="/customermanagement" element={<CustomerManagement />} />
           <Route path="/caja" element={<Caja />} />
           <Route path="/movimientos" element={<Movimientos />} />
-          <Route path="/login" element={<Login/>} />
-          <Route path="/receip" element={<Receipt/>} />
+          <Route path="/receip" element={<Receipt />} />
           <Route path="/appointments" element={<AppointmentCalendar />} />
           <Route path="/detallescliente" element={<DetallesCliente />} />
+          
+          {/* Ruta de inicio de sesión */}
+          <Route path="/login" element={<Login />} />
         </Routes>
       </Layout>
     </Router>
@@ -41,4 +44,5 @@ const App = () => {
 };
 
 export default App;
+
 

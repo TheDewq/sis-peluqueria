@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { auth } from '../services/firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
+import '../styles/styles.css'; // Importar estilos
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -22,9 +23,9 @@ const Login = () => {
   };
 
   return (
-    <div>
+    <div className="login-container">
       <h2>Iniciar Sesión</h2>
-      {error && <p>{error}</p>}
+      {error && <p style={{ color: 'red' }}>{error}</p>}
       <form onSubmit={handleLogin}>
         <input
           type="email"
@@ -47,4 +48,5 @@ const Login = () => {
 };
 
 export default Login;
+
 

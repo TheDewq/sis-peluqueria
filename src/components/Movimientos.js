@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { collection, getDocs, deleteDoc, doc, updateDoc } from 'firebase/firestore';
 import { db } from '../services/firebase';
 import '../styles/styles.css';
+
 const Movements = () => {
   const [movements, setMovements] = useState([]);
   const [editId, setEditId] = useState(null);
@@ -36,7 +37,7 @@ const Movements = () => {
     }
   };
 
-  const handleEditMovement = async (movement) => {
+  const handleEditMovement = (movement) => {
     setEditId(movement.id);
     setAmount(movement.amount);
     setReason(movement.reason || ''); // Si no hay motivo, dejar vacío
@@ -66,17 +67,36 @@ const Movements = () => {
     fetchMovements();
   }, []);
 
+  // Función para formatear la fecha en español
+  const formatDate = (date) => {
+    return new Intl.DateTimeFormat('es-ES', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      weekday: 'long',
+    }).format(date);
+  };
+
   return (
     <div className="movements-container">
       <h2 className="movements-title">Registro de Movimientos</h2>
       <ul className="movements-list">
         {movements.map(movement => (
           <li className="movements-item" key={movement.id}>
-            {movement.type === 'entrada' ? 'Entrada' : 'Salida'} - {movement.amount} $ 
-            {movement.reason && ` (Motivo: ${movement.reason})`} 
-            (Fecha: {movement.createdAt ? movement.createdAt.toDateString() : 'Fecha no disponible'})
-            <button className="movements-button" onClick={() => handleEditMovement(movement)}>Editar</button>
-            <button className="movements-button" onClick={() => handleDeleteMovement(movement.id)}>Eliminar</button>
+            <div className="movements-info">
+              <span className="movements-type">{movement.type === 'entrada' ? 'Entrada' : 'Salida'}</span>
+              <span className={`movements-amount ${movement.type === 'salida' ? 'out' : ''}`}>
+                {movement.amount} $
+              </span>
+            </div>
+            {movement.reason && <div className="movements-reason">(Motivo: {movement.reason})</div>}
+            <div className="movements-date">
+              (Fecha: {movement.createdAt ? formatDate(movement.createdAt) : 'Fecha no disponible'})
+            </div>
+            <div>
+              <button className="movements-button edit" onClick={() => handleEditMovement(movement)}>Editar</button>
+              <button className="movements-button delete" onClick={() => handleDeleteMovement(movement.id)}>Eliminar</button>
+            </div>
           </li>
         ))}
       </ul>
@@ -104,7 +124,8 @@ const Movements = () => {
       )}
     </div>
   );
-  
 };
 
 export default Movements;
+
+
