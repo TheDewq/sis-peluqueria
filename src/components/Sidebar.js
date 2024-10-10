@@ -16,7 +16,7 @@ const Sidebar = () => {
         <li><Link to="/customermanagement">Clientes</Link></li>
         <li><Link to="/caja">Caja</Link></li>
         <li><Link to="/movimientos">Movimientos</Link></li>
-        <li><Link to="/appointments">Citas</Link></li>
+        <li><Link to="/appointments">Agendar Citas</Link></li>
         <li><Link to="/detallescliente">Detalles De Citas</Link></li>
 
 
