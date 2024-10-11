@@ -21,6 +21,12 @@ const AddService = () => {
   };
 
   const handleAddService = async () => {
+    // Validación para verificar que todos los campos estén llenos
+    if (!serviceName || !servicePrice) {
+      alert('Por favor completa todos los campos antes de añadir el servicio.');
+      return; // Evita que se continúe si no están llenos los campos
+    }
+
     try {
       if (isEditing) {
         const serviceRef = doc(db, 'services', editingServiceId);
@@ -38,6 +44,7 @@ const AddService = () => {
         });
         alert('Servicio añadido exitosamente');
       }
+      // Reinicia los campos después de añadir/actualizar
       setServiceName('');
       setServicePrice('');
       fetchServices();
@@ -113,6 +120,7 @@ const AddService = () => {
 };
 
 export default AddService;
+
 
 
 

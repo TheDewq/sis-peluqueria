@@ -1,0 +1,57 @@
+/* src/styles/Login.css */
+
+.login-container {
+    background-color: #fff; /* Color de fondo del contenedor */
+    padding: 40px 30px; /* Espaciado interno */
+    border-radius: 12px; /* Bordes redondeados */
+    box-shadow: 0px 8px 30px rgba(0, 0, 0, 0.2); /* Sombra para profundidad */
+    width: 100%; /* Ancho completo */
+    max-width: 400px; /* Ancho máximo */
+    text-align: center; /* Centrar texto */
+    margin: 100px auto; /* Centrar verticalmente y horizontalmente con margen superior */
+}
+
+.login-container h2 {
+    font-size: 28px; /* Tamaño de fuente del título */
+    margin-bottom: 20px; /* Espaciado inferior */
+    color: #333; /* Color del texto */
+}
+
+.login-container input {
+    width: 100%; /* Ancho completo */
+    padding: 12px; /* Espaciado interno */
+    margin-bottom: 20px; /* Espaciado inferior */
+    border: 1px solid #ccc; /* Borde suave */
+    border-radius: 6px; /* Bordes redondeados */
+    font-size: 16px; /* Tamaño de fuente */
+    color: #555; /* Color del texto */
+    transition: border-color 0.3s ease; /* Transición para el borde */
+}
+
+.login-container input:focus {
+    outline: none; /* Sin contorno predeterminado */
+    border-color: #4a90e2; /* Color del borde al enfocar */
+}
+
+.login-container button {
+    width: 100%; /* Ancho completo */
+    padding: 12px; /* Espaciado interno */
+    background-color: #4a90e2; /* Color de fondo del botón */
+    color: #fff; /* Color del texto del botón */
+    font-size: 16px; /* Tamaño de fuente */
+    font-weight: bold; /* Negrita */
+    border: none; /* Sin borde */
+    border-radius: 6px; /* Bordes redondeados */
+    cursor: pointer; /* Cambiar cursor al pasar por encima */
+    transition: background-color 0.3s ease; /* Transición para el fondo */
+}
+
+.login-container button:hover {
+    background-color: #357ABD; /* Color de fondo al pasar por encima */
+}
+
+.login-container p {
+    margin-top: 20px; /* Espaciado superior */
+    font-size: 14px; /* Tamaño de fuente */
+    color: #777; /* Color del texto */
+}

@@ -3,11 +3,11 @@ import React from 'react';
 import Sidebar from './Sidebar';
 import '../styles/styles.css'; // Asegúrate de tener los estilos
 
-const Layout = ({ children }) => {
+const Layout = ({ children, showSidebar = true }) => {
   return (
     <div className="layout">
-      <Sidebar />
-      <div className="content">
+      {showSidebar && <Sidebar />} {/* Mostrar sidebar solo si showSidebar es true */}
+      <div className={`content ${showSidebar ? '' : 'full-width'}`}>
         {children}
       </div>
     </div>
@@ -15,3 +15,4 @@ const Layout = ({ children }) => {
 };
 
 export default Layout;
+

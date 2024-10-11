@@ -11,7 +11,14 @@ const AddProductModal = ({ onClose, onProductAdded }) => {
   const [quantity, setQuantity] = useState(0);
 
   const handleAddProduct = async () => {
+    // Validación de campos vacíos o no válidos
+    if (!productName || !brand || purchasePrice <= 0 || salePrice <= 0 || quantity < 0) {
+      alert('Por favor, rellena todos los campos correctamente antes de agregar el producto.');
+      return; // Si la validación falla, no continúa
+    }
+
     try {
+      // Si pasa la validación, agrega el producto a la base de datos
       await addDoc(collection(db, 'products'), {
         name: productName,
         brand: brand,
@@ -21,12 +28,14 @@ const AddProductModal = ({ onClose, onProductAdded }) => {
         createdAt: new Date(),
       });
       alert('Producto agregado exitosamente');
+      
       // Reinicia los campos después de agregar
       setProductName('');
       setBrand('');
       setPurchasePrice(0);
       setSalePrice(0);
       setQuantity(0);
+      
       onProductAdded(); // Llama a la función para actualizar la lista
       onClose(); // Cierra el modal
     } catch (error) {
@@ -63,6 +72,7 @@ const AddProductModal = ({ onClose, onProductAdded }) => {
             className="input-field"
             value={purchasePrice}
             onChange={(e) => setPurchasePrice(e.target.value)}
+            min="0"
           />
         </label>
         <label className="input-label">
@@ -72,6 +82,7 @@ const AddProductModal = ({ onClose, onProductAdded }) => {
             className="input-field"
             value={salePrice}
             onChange={(e) => setSalePrice(e.target.value)}
+            min="0"
           />
         </label>
         <label className="input-label">
@@ -81,6 +92,7 @@ const AddProductModal = ({ onClose, onProductAdded }) => {
             className="input-field"
             value={quantity}
             onChange={(e) => setQuantity(e.target.value)}
+            min="0"
           />
         </label>
         <button className="add-button" onClick={handleAddProduct}>Agregar Producto</button>
@@ -91,3 +103,4 @@ const AddProductModal = ({ onClose, onProductAdded }) => {
 };
 
 export default AddProductModal;
+
