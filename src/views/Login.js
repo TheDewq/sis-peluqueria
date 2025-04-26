@@ -22,10 +22,11 @@ const Login = () => {
   };
 
   return (
+    <div className='main-login'>
     <div className="login-container">
       <h2>Iniciar Sesión</h2>
       {error && <p style={{ color: 'red' }}>{error}</p>} {/* Mostrar mensaje de error si existe */}
-      <form onSubmit={handleLogin}>
+      <form onSubmit={handleLogin} className='form-login'>
         <input
           type="email"
           placeholder="Correo Electrónico"
@@ -42,6 +43,7 @@ const Login = () => {
         />
         <button type="submit">Iniciar Sesión</button>
       </form>
+    </div>
     </div>
   );
 };
